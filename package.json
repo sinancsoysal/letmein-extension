@@ -15,6 +15,7 @@
     "@types/node": "^16.18.24",
     "@types/react": "^18.2.0",
     "@types/react-dom": "^18.2.0",
+    "crypto-js": "^4.1.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-scripts": "5.0.1",
@@ -47,6 +48,7 @@
     ]
   },
   "devDependencies": {
-    "@types/chrome": "^0.0.233"
+    "@types/chrome": "^0.0.233",
+    "@types/crypto-js": "^4.1.1"
   }
 }

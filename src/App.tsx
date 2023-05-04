@@ -16,14 +16,74 @@ import InputLabel from '@mui/material/InputLabel';
 // import Select, { SelectChangeEvent } from '@mui/material/Select';
 import FormControl from '@mui/material/FormControl';
 import './App.css';
-import { Container, Stack, maxWidth, minHeight } from '@mui/system';
+import { Container, Stack, maxHeight, maxWidth, minHeight } from '@mui/system';
+import { Dialog, DialogActions, DialogContent, DialogTitle } from '@mui/material';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import DevicesIcon from '@mui/icons-material/Devices';
+import AddIcon from '@mui/icons-material/Add';
+import SyncIcon from '@mui/icons-material/Sync';
+import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
+import Devices from './components/Devices';
+import AddDevice from './components/AddDevice';
+import JoinSync from './components/JoinSync';
 
 const ColorModeContext = React.createContext({ toggleColorMode: () => {} });
 
-function App() {
+function getTheme(prefersDarkMode: boolean): 'light' | 'dark' {
+  const theme = localStorage.getItem('theme');
+  if (theme) {
+    return theme as 'light' | 'dark';
+  } else {
+    const initialTheme = prefersDarkMode ? 'dark' : 'light';
+    localStorage.setItem('theme', initialTheme);
+    return initialTheme;
+  }
+}
+
+function App() {  
   const theme = useTheme();
   const colorMode = React.useContext(ColorModeContext);
   const [currentUrl, setCurrentUrl] = useState<string>("");
+
+  const [showSettings, setShowSettings] = useState(false);
+
+  const handleSettingsClick = () => {
+    setShowSettings(true);
+  };
+
+  const handleHideSettings = () => {
+    setShowSettings(false);
+  };
+
+  const [showDevices, setShowDevices] = useState(false);
+
+  const handleDevicesClick = () => {
+    setShowDevices(true);
+  };
+
+  const handleHideDevices = () => {
+    setShowDevices(false);
+  };
+
+  const [showAddDevice, setShowAddDevice] = useState(false);
+
+  const handleAddDeviceClick = () => {
+    setShowAddDevice(true);
+  };
+
+  const handleHideAddDevice = () => {
+    setShowAddDevice(false);
+  };
+
+  const [showJoin, setShowJoin] = useState(false);
+
+  const handleJoinClick = () => {
+    setShowJoin(true);
+  };
+
+  const handleHideJoin = () => {
+    setShowJoin(false);
+  };
 
   // const [account, setAccount] = React.useState(''); 
   // const handleChange = (event: SelectChangeEvent) => {
@@ -60,14 +120,14 @@ function App() {
           <IconButton sx={{ ml: 1 }} onClick={colorMode.toggleColorMode} color="inherit">
             {theme.palette.mode === 'dark' ? <Brightness7Icon /> : <Brightness4Icon />}
           </IconButton>
-          <IconButton sx={{ mr: 1 }} color="inherit">
+          <IconButton sx={{ mr: 1 }} color="inherit" onClick={handleSettingsClick}>
             <SettingsIcon />
           </IconButton>
         </Container>
         {theme.palette.mode === 'dark' ? <img src={whiteLogo} className="App-logo" alt="logo" /> : <img src={blackLogo} className="App-logo" alt="logo" />}
         <Stack
           sx={{
-            paddingTop: 3,
+            paddingTop: 4,
             paddingRight: 10,
             paddingLeft: 10,
             minHeight: '400px'
@@ -119,13 +179,71 @@ function App() {
             Get Password
           </Button>
         </Stack>
+        <div className='footer'>
+          © {new Date().getFullYear()} Copyright:&nbsp;
+          <a className='App-link' href="https://sinancansoysal.com" target="_blank" rel="noreferrer">Sinan Can SOYSAL</a>
+        </div>
       </Stack>
+      <Dialog fullScreen open={showSettings} onClose={handleHideSettings}>
+        <DialogTitle>Settings</DialogTitle>
+        <DialogContent>
+          <Stack
+            sx={{
+              justifyContent: 'space-between',
+              color: 'text.primary',
+              p: 15,
+            }}
+            spacing={5}
+          >
+            <Button variant="contained" endIcon={<DevicesIcon />} onClick={handleDevicesClick}>
+              Synced Devices
+            </Button>
+            <Button variant="contained" endIcon={<AddIcon />} onClick={handleAddDeviceClick}>
+              Add New Device
+            </Button>
+            <Button variant="contained" endIcon={<SyncIcon />} onClick={handleJoinClick}>
+              Join Sync Chain
+            </Button>
+          </Stack>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleHideSettings}>Close</Button>
+        </DialogActions>
+      </Dialog>
+      <Dialog fullScreen open={showDevices} onClose={handleHideDevices}>
+        <DialogTitle>Devices</DialogTitle>
+        <DialogContent>
+          <Devices />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleHideDevices} startIcon={<ArrowBackIosNewIcon />}>Go Back</Button>
+        </DialogActions>
+      </Dialog>
+      <Dialog fullScreen open={showAddDevice} onClose={handleHideAddDevice}>
+        <DialogTitle>Add Device</DialogTitle>
+        <DialogContent>
+          <AddDevice />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleHideAddDevice} startIcon={<ArrowBackIosNewIcon />}>Go Back</Button>
+        </DialogActions>
+      </Dialog>
+      <Dialog fullScreen open={showJoin} onClose={handleHideJoin}>
+        <DialogTitle>Join Sync</DialogTitle>
+        <DialogContent>
+          <JoinSync />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleHideJoin} startIcon={<ArrowBackIosNewIcon />}>Go Back</Button>
+        </DialogActions>
+      </Dialog>
     </>
   );
 }
 
 export default function ToggleColorMode() {
-  const [mode, setMode] = React.useState<'light' | 'dark'>('light');
+  const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
+  const [mode, setMode] = React.useState<'light' | 'dark'>(getTheme(prefersDarkMode));
   const colorMode = React.useMemo(
     () => ({
       toggleColorMode: () => {
