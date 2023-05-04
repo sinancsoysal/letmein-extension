@@ -6,35 +6,7 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
-
-function copyToClipboard (text: string) {
-    navigator.clipboard.writeText(text);
-};
-
-function retrieveSyncCode () {
-  // Retrieve the encrypted sync code from local storage
- const storedEncryptedSyncCode = localStorage.getItem('SyncCode');
-
-  // If the encrypted sync code exists in local storage, decrypt it and assign it to the state variable
-  if (storedEncryptedSyncCode) {
-    const decryptedSyncCode = AESDecrypt(storedEncryptedSyncCode);
-    return decryptedSyncCode;
-  }
-
-  return "Device not registered in a Sync Chain yet.";
-}
-
-function countWords(str: string): number {
-  // Trim whitespace from the beginning and end of the string
-  str = str.trim();
-  
-  // Split the string into an array of words
-  const words = str.split(/\s+/);
-  
-  // Return the length of the words array
-  return words.length;
-}
-  
+import { retrieveSyncCode, copyToClipboard, countWords } from './Util';
 
 export default function AddDevice() {
   const syncCode = retrieveSyncCode ();

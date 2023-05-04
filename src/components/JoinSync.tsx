@@ -1,30 +1,11 @@
 import * as React from 'react';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
-import { AESEncrypt } from './Crypto';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import SyncIcon from '@mui/icons-material/Sync';
-
-function saveSyncCode (syncCode: string) {
-  // encrypt sync code
-  const encryptedSyncCode = AESEncrypt(syncCode);
-  // save the encrypted sync code to local storage
- localStorage.setItem('SyncCode', encryptedSyncCode);
-}
-
-function countWords(str: string): number {
-  // Trim whitespace from the beginning and end of the string
-  str = str.trim();
-  
-  // Split the string into an array of words
-  const words = str.split(/\s+/);
-  
-  // Return the length of the words array
-  return words.length;
-}
-  
+import SyncIcon from '@mui/icons-material/Sync';  
+import { saveSyncCode, countWords } from './Util';
 
 export default function JoinSync() {
   const [syncCode, setSyncCode] = React.useState('');
